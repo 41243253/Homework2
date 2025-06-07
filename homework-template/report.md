@@ -205,7 +205,69 @@ void printMemoryUsage()
         << "----------------------------------------------------------\n";
 }
 ```
+測試堆積的效能與各個函式平均耗時，傳入堆積類別、資料向量與標籤名稱(用來識別是最小堆積還是最大堆積)
+```cpp
+template <typename HeapType>
+void TestHeapPerformance(HeapType& heap, const vector<int>& data, const string& label) 
+{
+    int n = data.size();
 
+    //Push測試與計時
+    auto start = high_resolution_clock::now();
+    for (int i = 0; i < n; ++i) heap.Push(data[i]);
+    auto end = high_resolution_clock::now();
+    double pushTime = duration<double, micro>(end - start).count() / n;
+
+    //Top測試與計時
+    start = high_resolution_clock::now();
+    for (int i = 0; i < n; ++i) heap.Top();
+    end = high_resolution_clock::now();
+    double topTime = duration<double, micro>(end - start).count() / n;
+
+    //IsEmpty測試與計時
+    start = high_resolution_clock::now();
+    for (int i = 0; i < n; ++i) heap.IsEmpty();
+    end = high_resolution_clock::now();
+    double isEmptyTime = duration<double, micro>(end - start).count() / n;
+
+    //Pop測試與計時
+    start = high_resolution_clock::now();
+    for (int i = 0; i < n; ++i) heap.Pop();
+    end = high_resolution_clock::now();
+    double popTime = duration<double, micro>(end - start).count() / n;
+
+    //輸出每個函式的平均耗時與記憶體使用資訊
+    cout << "(" << label << ") Data size = " << n << endl;
+    cout << "Average Push time: \t" << pushTime << " us\n";
+    cout << "Average Pop time: \t" << popTime << " us\n";
+    cout << "Average Top time: \t" << topTime << " us\n";
+    cout << "Average IsEmpty time: " << isEmptyTime << " us\n";
+    printMemoryUsage();
+    cout << endl;
+}
+```
+主程式，使用者輸入測資筆數後會生成 n 筆亂數資料，再建立最小堆積和最大堆積，用相同測資測試兩種堆積的四個函式（Push、Top、Pop、IsEmpty）效能，最後輸出平均耗時與記憶體使用狀況
+```cpp
+int main() 
+{
+    srand(time(nullptr)); //設定亂數種子
+
+    int n;
+    cout << "請輸入測試資料筆數 n: ";
+    cin >> n;
+
+    vector<int> data(n); //建立長度為 n 的vector來儲存亂數
+    for (int i = 0; i < n; ++i) data[i] = rand(); //生成亂數資料
+
+    MinHeap<int> minHeap; //建立最小堆積
+    MaxHeap<int> maxHeap; //建立最大堆積
+
+    TestHeapPerformance(minHeap, data, "MinHeap"); //測試最小堆積的效能
+    TestHeapPerformance(maxHeap, data, "MaxHeap"); //測試最大堆積的效能
+
+    return 0;
+}
+```
 ## 效能分析
 
 1. 時間複雜度：程式的時間複雜度為 $O(\log n)$。
