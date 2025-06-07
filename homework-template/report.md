@@ -472,6 +472,19 @@ Node* deleteNode(Node* root, int k, int& steps) {
     }
     return root;
 }
+
+```
+顯示目前程式使用的記憶體狀態
+```cpp
+void printMemoryUsage() 
+{
+    PROCESS_MEMORY_COUNTERS memInfo;
+    GetProcessMemoryInfo(GetCurrentProcess(), &memInfo, sizeof(memInfo));
+    cout << "----------------------------------------------------------\n"
+        << "Memory Usage Information:\n"
+        << "Working Set Size: " << memInfo.WorkingSetSize / 1024 << " KB\n"
+        << "----------------------------------------------------------\n";
+}
 ```
 釋放建立樹的記憶體  
 ```cpp
