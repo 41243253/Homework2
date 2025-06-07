@@ -270,9 +270,10 @@ int main()
 ```
 ## 效能分析
 
-1. 時間複雜度：- 函式IsEmpty()和Top()在MaxHeap和MinHeap的時間複雜度皆為 $O(1)$。
-              - 函式Push()和Pop()在MaxHeap和MinHeap的時間複雜度皆為 $O(log n)$。
-2. 空間複雜度：使用vector<T>，因此空間複雜度為 $O(n)$。
+1. 時間複雜度：
+   - 函式IsEmpty()和Top()在MaxHeap和MinHeap的時間複雜度皆為 $O(1)$。
+   - 函式Push()和Pop()在MaxHeap和MinHeap的時間複雜度皆為 $O(log n)$。
+3. 空間複雜度：使用vector<T>，因此空間複雜度為 $O(n)$。
 
 ## 測試與驗證
 
