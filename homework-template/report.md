@@ -280,7 +280,8 @@ int main()
 
 ### 測試結果
 
-
+### 圖表分析
+![MinHeap和MaxHeap的函式IsEmpty比較圖](<https://github.com/41243253/example-1/blob/main/IsEmpty.png>)
 
 # **Binary Search Tree**
 
