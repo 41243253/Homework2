@@ -17,10 +17,7 @@
 
 ## 程式實作
 
-MaxHeap程式碼:
-
 有使用到的標頭檔以及命名空間使用宣告
-
 ```cpp
 #include <iostream>
 #include <vector>
@@ -28,9 +25,187 @@ MaxHeap程式碼:
 #include <ctime>         //取得目前時間來做亂數種子
 #include <chrono>        //時間的測量
 #include <windows.h>     //取得記憶體的使用資訊
-#include <psapi.h>       //配合上面<windows.h> 一起取得記憶體資
+#include <psapi.h>       //配合上面<windows.h> 一起取得記憶體資訊
 using namespace std;
 using namespace chrono; //用來計時
+```
+
+以下是MinHeap程式碼:
+
+抽象類別MinPQ(最小優先權佇列)
+```cpp
+template <class T>
+class MinPQ 
+{
+public:
+    virtual ~MinPQ() {}
+    virtual bool IsEmpty() const = 0;         //是否為空
+    virtual const T& Top() const = 0;         //取得堆積頂部的元素
+    virtual void Push(const T&) = 0;          //插入元素
+    virtual void Pop() = 0;                   //移除堆積頂部的元素
+};
+```
+MinHeap類別實作MinPQ
+```cpp
+template <class T>
+class MinHeap : public MinPQ<T> 
+{
+private:
+    vector<T> heap;
+
+    //將新插入的元素往上調整
+    void HeapifyUp(int index) 
+    {
+        while (index > 0 && heap[index] < heap[(index - 1) / 2]) 
+        {
+            swap(heap[index], heap[(index - 1) / 2]);
+            index = (index - 1) / 2;
+        }
+    }
+
+    //將根節點往下調整
+    void HeapifyDown(int index) 
+    {
+        int size = heap.size();
+        while (index * 2 + 1 < size) 
+        {
+            int left = index * 2 + 1;
+            int right = index * 2 + 2;
+            int smallest = index;
+
+            if (left < size && heap[left] < heap[smallest]) smallest = left;
+            if (right < size && heap[right] < heap[smallest]) smallest = right;
+
+            if (smallest != index) 
+            {
+                swap(heap[index], heap[smallest]);
+                index = smallest;
+            }
+            else break;
+        }
+    }
+
+public:
+    bool IsEmpty() const override 
+    {
+        return heap.empty(); //檢查vector是否為空
+    }
+
+    const T& Top() const override 
+    {
+        if (heap.empty()) throw runtime_error("Heap is empty");
+        return heap[0]; //回傳堆積頂部元素
+    }
+
+    void Push(const T& val) override 
+    {
+        heap.push_back(val);           //加到堆積尾端
+        HeapifyUp(heap.size() - 1);    //調整位置維持最小堆積性質
+    }
+
+    void Pop() override 
+    {
+        if (heap.empty()) throw runtime_error("Heap is empty");
+        heap[0] = heap.back();         //將最後元素移到堆積頂部
+        heap.pop_back();               //移除最尾端的元素
+        HeapifyDown(0);                //調整位置維持堆積性質
+    }
+};
+```
+
+以下是MaxHeap程式碼:
+
+抽象類別MaxPQ(最大優先權佇列)
+```cpp
+template <class T>
+class MaxPQ
+{
+public:
+    virtual ~MaxPQ() {}
+    virtual bool IsEmpty() const = 0;
+    virtual const T& Top() const = 0;
+    virtual void Push(const T&) = 0;
+    virtual void Pop() = 0;
+};
+```
+MaxHeap類別實作MaxPQ
+```cpp
+template <class T>
+class MaxHeap : public MaxPQ<T> 
+{
+private:
+    vector<T> heap;
+
+    //將新插入的元素往上調整
+    void HeapifyUp(int index)
+    {
+        while (index > 0 && heap[index] > heap[(index - 1) / 2])
+        {
+            swap(heap[index], heap[(index - 1) / 2]);
+            index = (index - 1) / 2;
+        }
+    }
+
+    //將根節點往下調整
+    void HeapifyDown(int index)
+    {
+        int size = heap.size();
+        while (index * 2 + 1 < size) 
+        {
+            int left = index * 2 + 1;
+            int right = index * 2 + 2;
+            int largest = index;
+
+            if (left < size && heap[left] > heap[largest]) largest = left;
+            if (right < size && heap[right] > heap[largest]) largest = right;
+
+            if (largest != index) 
+            {
+                swap(heap[index], heap[largest]);
+                index = largest;
+            }
+            else break;
+        }
+    }
+
+public:
+    bool IsEmpty() const override 
+    {
+        return heap.empty(); //檢查vector是否為空
+    }
+
+    const T& Top() const override 
+    {
+        if (heap.empty()) throw runtime_error("Heap is empty");
+        return heap[0]; //回傳堆積頂部元素
+    }
+
+    void Push(const T& val) override 
+    {
+        heap.push_back(val);           //加到堆積尾端
+        HeapifyUp(heap.size() - 1);    //調整位置維持最大堆積性質
+    }
+
+    void Pop() override 
+    {
+        if (heap.empty()) throw runtime_error("Heap is empty");
+        heap[0] = heap.back();         //將最後元素移到堆積頂部
+        heap.pop_back();               //移除最尾端的元素
+        HeapifyDown(0);                //調整位置維持堆積性質
+    }
+};
+```
+顯示目前程式使用的記憶體狀態
+```cpp
+void printMemoryUsage() 
+{
+    PROCESS_MEMORY_COUNTERS memInfo;
+    GetProcessMemoryInfo(GetCurrentProcess(), &memInfo, sizeof(memInfo));
+    cout << "----------------------------------------------------------\n"
+        << "Memory Usage Information:\n"
+        << "Working Set Size: " << memInfo.WorkingSetSize / 1024 << " KB\n"
+        << "----------------------------------------------------------\n";
+}
 ```
 
 ## 效能分析
