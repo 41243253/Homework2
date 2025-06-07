@@ -277,11 +277,22 @@ int main()
 
 ## 測試與驗證
 
-
 ### 測試結果
 
+
+
 ### 圖表分析
-![MinHeap和MaxHeap的函式IsEmpty比較圖](<https://github.com/41243253/example-1/blob/main/IsEmpty.png>)
+MinHeap和MaxHeap的函式IsEmpty比較圖
+![函式IsEmpty比較圖](<https://github.com/41243253/example-1/blob/main/IsEmpty.png>)
+
+MinHeap和MaxHeap的函式Top比較圖
+![函式Top比較圖](<https://github.com/41243253/example-1/blob/main/Top.png>)
+
+MinHeap和MaxHeap的函式Push比較圖
+![函式Push比較圖](<https://github.com/41243253/example-1/blob/main/Push.png>)
+
+MinHeap和MaxHeap的函式Pop比較圖
+![函式Pop比較圖](<https://github.com/41243253/example-1/blob/main/Pop.png>)
 
 # **Binary Search Tree**
 
