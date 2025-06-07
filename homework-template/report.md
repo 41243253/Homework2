@@ -52,6 +52,196 @@ int main() {
 | 測試四   | $n = 5$      | 15       | 15       |
 | 測試五   | $n = -1$     | 異常拋出 | 異常拋出 |
 
+# **Binary Search Tree**
+
+## 題目需求
+- (a)寫一個程式，從一棵最初為空的二元搜尋樹（BST）開始，並進行 n 筆隨機插入。
+使用均勻隨機數產生器來產生要插入的值。
+接著，量測最終得到的二元搜尋樹的高度，並將此高度除以log2𝑛對於以下 n 值進行測試：
+n=100,500,1000,2000,3000,…,10,000。
+- (b)
+寫一個 C++ 函式，從二元搜尋樹中刪除鍵值為 k 的節點，並說明這個函式的時間複雜度。
+
+## 解題說明
+以下為程式使用的標頭檔  
+```cpp
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+#include <windows.h>
+#include <psapi.h>
+#include <chrono>
+#include <vector>
+#include <algorithm>
+using namespace std;
+```
+定義節點的結構  
+```cpp
+struct Node {
+    int key;
+    Node* left;
+    Node* right;
+    Node(int val) : key(val), left(nullptr), right(nullptr) {}
+};
+```
+判斷是否為空後根據條件插入節點內容  
+```cpp
+Node* insert(Node* root, int key) {
+    if (!root)
+        return new Node(key);
+    if (key < root->key)
+        root->left = insert(root->left, key);
+    else
+        root->right = insert(root->right, key);
+    return root;
+}
+```
+中序遍歷  
+```cpp
+void inorder(Node* root, vector<int>& keys) {
+    if (!root) return;
+    inorder(root->left, keys);
+    keys.push_back(root->key);
+    inorder(root->right, keys);
+}
+```
+計算樹的高度  
+```cpp
+int Height(Node* root) {
+    if (!root)
+        return 0;
+    int leftHeight = Height(root->left);
+    int rightHeight = Height(root->right);
+    return 1 + max(leftHeight, rightHeight);
+}
+```
+找尋最小節點並計算找尋的步驟數  
+```cpp
+Node* findMin(Node* root, int& steps) {
+    while (root && root->left) {
+        root = root->left;
+        steps++;
+    }
+    return root;
+}
+```
+判定節點是否為葉節點或是擁有子節點  
+```cpp
+void nodeType(Node* root, int key) {
+    if (!root) return;
+    if (key < root->key)
+        nodeType(root->left, key);
+    else if (key > root->key)
+        nodeType(root->right, key);
+    else {
+        cout << "刪除節點 " << key << "：";
+        if (!root->left && !root->right)
+            cout << "它是葉節點。\n";
+        else if (!root->left || !root->right)
+            cout << "它有 1 個子節點。\n";
+        else
+            cout << "它有 2 個子節點。\n";
+    }
+}
+```
+刪除鍵值為k2的節點，並計算比較次數  
+```cpp
+Node* deleteNode(Node* root, int k, int& steps) {
+    if (!root) return nullptr;
+    steps++;
+    if (k < root->key) {
+        root->left = deleteNode(root->left, k, steps);
+    }
+    else if (k > root->key) {
+        root->right = deleteNode(root->right, k, steps);
+    }
+    else {
+        if (!root->left) {
+            Node* temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (!root->right) {
+            Node* temp = root->left;
+            delete root;
+            return temp;
+        }
+        else {
+            int findSteps = 1;
+            Node* successor = findMin(root->right, findSteps);
+            steps += findSteps;
+            root->key = successor->key;
+            root->right = deleteNode(root->right, successor->key, steps);
+        }
+    }
+    return root;
+}
+```
+釋放建立樹的記憶體  
+```cpp
+void deleteTree(Node* root) {
+    if (!root) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+```
+### 以下為主程式的內容  
+第一部分為建立n=100, 500, 1000, 2000, 3000, 4000, 5000, 10000 筆資料時樹的高度，及將高度除以log2n後是否趨近於常數值2的結果，並計算在建立這些資料後隨機挑選一個樹裡面的樹值，並計算在刪除後所需要的平均步驟和最壞的步驟數。
+```cpp
+int main() {
+    srand(time(0)); // 初始化亂數種子
+
+    // Part 1：n=100,500,...,10000 建立 BST，隨機刪除並紀錄比較次數
+    int n_values[] = { 100, 500, 1000, 2000, 3000, 4000, 5000, 10000 };
+
+    cout << "n\t樹高\tlog2(n)\t\t樹高/log2(n)" << endl;
+    cout << "----------------------------------------------------------" << endl;
+
+    vector<int> deleteComparisons;
+
+    for (int i = 0; i < 8; ++i) {
+        int n = n_values[i];
+        Node* root = nullptr;
+
+        // 插入 n 筆亂數資料
+        for (int j = 0; j < n; ++j) {
+            int val = rand() % (n * 10) + 1;
+            root = insert(root, val);
+        }
+
+        // 計算高度與比值
+        int height = Height(root);
+        double log2n = log2(n);
+        double ratio = height / log2n;
+
+        cout << n << "\t" << height << "\t" << log2n << "\t\t" << ratio << endl;
+
+        // 隨機從中序遍歷結果中選一個值做刪除
+        vector<int> keys;
+        inorder(root, keys);
+        int randomIndex = rand() % keys.size();
+        int deleteKey = keys[randomIndex];
+
+        int steps = 0;
+        root = deleteNode(root, deleteKey, steps);
+        deleteComparisons.push_back(steps);
+
+        deleteTree(root);
+    }
+
+    // 統計平均和最壞比較次數
+    int total = 0, worst = 0;
+    for (int c : deleteComparisons) {
+        total += c;
+        worst = max(worst, c);
+    }
+    double average = (double)total / deleteComparisons.size();
+
+    cout << "\n刪除操作的平均比較次數: " << average << endl;
+    cout << "刪除操作的最壞比較次數: " << worst << endl;
+```
 
 ### 結論
 
