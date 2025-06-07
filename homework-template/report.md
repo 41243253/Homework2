@@ -652,6 +652,9 @@ int main() {
 ![執行結果示意圖](https://github.com/41243253/example-1/blob/main/result.png)
 ![執行結果示意圖](https://github.com/41243253/example-1/blob/main/result2.png)
 
+# 函數圖形
+![執行結果示意圖](https://github.com/41243253/example-1/blob/main/result3.png)
+
 ## 申論及開發報告
 
 ### 選擇遞迴的原因
