@@ -3,6 +3,8 @@
 
 作業二
 
+# **Max/Min Heap**
+
 ## 解題說明
 
 本題為替定義一個最小優先權佇列的ADT MinPQ寫一個類似於ADT 5.2的抽象類別，寫一個衍生自這個抽象類別的MinHeap並實作所有MinPQ的虛擬函式，最後計算每一個函式的時間複雜度並且和MaxHeap複雜度做是否相同的判斷。
@@ -15,24 +17,19 @@
 
 ## 程式實作
 
-以下為主要程式碼：
+以下為MaxHeap程式碼：
+有使用到的標頭檔以及命名空間使用宣告
 
 ```cpp
 #include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>         //取得目前時間來做亂數種子
+#include <chrono>        //時間的測量
+#include <windows.h>     //取得記憶體的使用資訊
+#include <psapi.h>       //配合上面<windows.h> 一起取得記憶體資
 using namespace std;
-
-int sigma(int n) {
-    if (n < 0)
-        throw "n < 0";
-    else if (n <= 1)
-        return n;
-    return n + sigma(n - 1);
-}
-
-int main() {
-    int result = sigma(3);
-    cout << result << '\n';
-}
+using namespace chrono; //用來計時
 ```
 
 ## 效能分析
