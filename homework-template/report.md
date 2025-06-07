@@ -341,6 +341,12 @@ MinHeap和MaxHeap的函式Pop比較圖
 
 ![函式Pop比較圖](<https://github.com/41243253/example-1/blob/main/Pop.png>)
 
+### 結論
+
+1.Push與Pop函式的執行時間與資料筆數呈對數成長，符合 $O(log n)$時間複雜度。
+2.Top與IsEmpty函式的時間複雜度 $O(1)$，即使在大量資料下也維持穩定效能。
+3.MaxHeap與MinHeap在同樣資料下的效能表現相近，差異只有比較方向(大於、小於)。
+
 # **Binary Search Tree**
 
 ## 題目需求
