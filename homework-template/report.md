@@ -278,8 +278,7 @@ int main()
 ## 測試與驗證
 
 ### 測試結果
-
-
+![輸出結果](<https://github.com/41243253/example-1/blob/main/%E8%BC%B8%E5%87%BA%E7%B5%90%E6%9E%9C.png>)
 
 ### 圖表分析
 MinHeap和MaxHeap的函式IsEmpty比較圖
