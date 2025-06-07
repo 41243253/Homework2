@@ -528,7 +528,7 @@ int main() {
 ### 測試結果
 ![二元搜尋樹示意圖](https://github.com/41243240/Example/blob/main/BST.png)
 ### 高度除以 $log2(n)$ 圖表
-![樹高度除以log2n](https://github.com/41243240/Example/blob/main/Tree-height.png)
+![樹高度除以log2n](https://github.com/41243240/Example/blob/main/Height.png)
 ### 結論
 
 1. 程式能正確計算 $n$ 到 $1$ 的連加總和。  
