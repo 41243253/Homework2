@@ -240,6 +240,43 @@ int main() {
     cout << "\n刪除操作的平均比較次數: " << average << endl;
     cout << "刪除操作的最壞比較次數: " << worst << endl;
 ```
+第二部分為查看刪除的步驟，並顯示刪除的節點的狀態為何，之後顯示記憶體使用量並刪除樹占用的記憶體。  
+```cpp
+    // Part 2：建立預設資料，分三步驟刪除
+    cout << "\n----------------------------------------------------------" << endl;
+    cout << "建立預設資料 [10, 20, 30, 40, 50] 並依序刪除 10, 30, 40。\n";
+
+    Node* root = nullptr;
+    int preset[] = { 10, 20, 30, 40, 50 };
+    for (int val : preset) {
+        root = insert(root, val);
+    }
+
+    cout << "初始 BST (中序遍歷)：";
+    vector<int> tmp;
+    inorder(root, tmp);
+    for (int x : tmp) cout << x << " ";
+    cout << endl;
+
+    int keysToDelete[] = { 10, 30, 40 };
+    for (int key : keysToDelete) {
+        nodeType(root, key);
+        int steps = 0;
+        root = deleteNode(root, key, steps);
+        cout << "刪除 " << key << " 後中序遍歷：";
+        vector<int> tmp2;
+        inorder(root, tmp2);
+        for (int x : tmp2) cout << x << " ";
+        cout << "\n樹的高度: " << Height(root) << endl;
+        cout << "刪除 " << key << " 過程比較次數: " << steps << "\n" << endl;
+    }
+
+    printMemoryUsage();
+    deleteTree(root);
+
+    return 0;
+}
+```
 ### 測試結果
 ![二元搜尋樹示意圖](https://github.com/41243240/Example/blob/main/BST.png)
 ### 高度除以 $log2(n)$ 圖表
