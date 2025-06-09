@@ -681,3 +681,32 @@ int main() {
 4. k越大，合併次數越少，總輸入時間下降，k太小則會導致多輪merge，增加I/O時間。
 5. 當k=8時，合併次數為2，為一個合理選擇。
 ## 申論及開發報告
+
+- **實作重點**  
+  - **Max/Min Heap**：
+    - 使用C++ vector搭配template設計。
+    - Push/Pop實作HeapifyUp、HeapifyDown維持heap的特性。
+    - 抽象化共同介面(如IsEmpty()、Top())，便於Max與Min共用邏輯。
+    - 使用chrono量測每個操作時間，搭配記憶體追蹤工具量測用量。
+  - **Binary Search Tree**：  
+    - 節點包含值與左右子樹指標，建構空樹後進行隨機插入。
+    - 比較TreeHeight/log2(n)，觀察是否趨近平衡。
+    - 節點刪除涵蓋三種情況：葉節點、單子樹、雙子樹(找inorder successor)。
+    - 實作中紀錄比較次數，觀察實際時間複雜度變化。
+  - **exercise 1**：  
+    - 改變 $k$值模擬多路合併影響，觀察輸入成本隨 $k$的變化。
+    - 將模擬數據繪圖，分析存在最佳 $k$值使CPU與I/O負載平衡。
+  
+
+- **測試策略**  
+  - **Max/Min Heap**：各函式(Push/Pop/Top/IsEmpty)個別多次執行並記錄耗時。  
+  - **Binary Search Tree**：  
+    - BST重複插入 $n$筆隨機資料，平均化高度與比較次數結果。  
+    - BST刪除測試三種情境(葉節點/單子樹/雙子樹)，記錄比較數與時間。
+  - **exercise 1**：External Merge測試多組 $k$值，觀察合併次數與總輸入時間趨勢。
+
+- **結論**  
+  - Heap結構效能穩定，Push/Pop維持 $O(log n)$，Top/IsEmpty為 $O(1)$，Max/Min Heap差異極小。
+  - BST高度驗證理論：隨機插入下高度趨近 $O(log n)$，刪除操作則可能達 $O(n)$。
+  - External Merge：合併次數隨 $k$ 增加而減少，輸入時間下降。k過小會導致I/O次數過多，過大則CPU合併成本增加，需權衡取最適值。
+  - 整體實作驗證了資料結構與演算法理論在實務中之應用與限制，提升對時間與空間複雜度的理解。
